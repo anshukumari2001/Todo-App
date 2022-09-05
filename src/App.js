@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import { nanoid } from "nanoid";
+//import { nanoid } from "nanoid";
 import Form from "./components/Form";
 import FilterButton from "./components/FilterButton";
 import Todo from "./components/Todo";
@@ -11,7 +11,7 @@ function usePrevious(value) {
   });
   return ref.current;
 }
-
+var tasks = [{"id":"todo-0","name":"Eat","completed":true},{"id":"todo-1","name":"Sleep","completed":false},{"id":"todo-2","name":"Repeat","completed":false}]
 const FILTER_MAP = {
   All: () => true,
   Active: (task) => !task.completed,
@@ -19,14 +19,20 @@ const FILTER_MAP = {
 };
 
 const FILTER_NAMES = Object.keys(FILTER_MAP);
+const str = JSON.stringify(FILTER_MAP);
 
 function App(props) {
   const [tasks, setTasks] = useState(props.tasks);
+  console.log("8************"+JSON.stringify(tasks))
+console.log('------------'+ str);
+
   const [filter, setFilter] = useState('All');
 
   function addTask(name) {
-    const newTask = { id: `todo-${nanoid()}`, name, completed: false };
+    //const newTask = { id: `todo-${nanoid()}`, name, completed: false };
+    const newTask = { id: '1', name, completed: false };
     setTasks([...tasks, newTask]);
+    console.log("$$$$$$$$$$"+tasks)
   }
 
   function toggleTaskCompleted(id) {
@@ -40,6 +46,7 @@ function App(props) {
       return task;
     });
     setTasks(updatedTasks);
+    console.log("Completed -------"+updatedTasks)
   }
 
   function deleteTask(id) {
@@ -48,6 +55,7 @@ function App(props) {
   }
 
   function editTask(id, newName) {
+    console.log("Start     --"+JSON.stringify(tasks));
     const editedTaskList = tasks.map((task) => {
       // if this task has the same ID as the edited task
       if (id === task.id) {
@@ -59,17 +67,20 @@ function App(props) {
     setTasks(editedTaskList);
   }
 
-  const taskList = tasks
-    .filter(FILTER_MAP[filter])
-    .map((task) => (
+  //tasks = [{"id":"todo-0","name":"Eat","completed":true},{"id":"todo-1","name":"Sleep","completed":false},{"id":"todo-2","name":"Repeat","completed":false}]
+  console.log("Above     --"+JSON.stringify(tasks));
+//filter(FILTER_MAP['All'])
+const testTasks =[ {"id":"todo-0","name":"Eat","completed":true},{"id":"todo-1","name":"Sleep","completed":false},{"id":"todo-2","name":"Repeat","completed":false}]
+  const taskList = 
+  testTasks.map((task) => (
       <Todo
         id={task.id}
         name={task.name}
         completed={task.completed}
         key={task.id}
         toggleTaskCompleted={toggleTaskCompleted}
-        deleteTask={deleteTask}
-        editTask={editTask}
+        //deleteTask={deleteTask}
+        //editTask={editTask}
       />
     ));
 
@@ -85,13 +96,13 @@ function App(props) {
   const tasksNoun = taskList.length !== 1 ? 'tasks' : 'task';
   const headingText = `${taskList.length} ${tasksNoun} remaining`;
   const listHeadingRef = useRef(null);
-  const prevTaskLength = usePrevious(tasks.length);
+  const prevTaskLength = usePrevious(testTasks.length);
 
   useEffect(() => {
-    if (tasks.length - prevTaskLength === -1) {
+    if (testTasks.length - prevTaskLength === -1) {
       listHeadingRef.current.focus();
     }
-  }, [tasks.length, prevTaskLength]);  
+  }, [testTasks.length, prevTaskLength]);  
 
 
   return (
